@@ -5,6 +5,10 @@ import type { Workflow } from 'n8n-workflow';
 import type { IWorkflowDb } from '@/Interface';
 import { useCanvasMapping } from '@/composables/useCanvasMapping';
 
+defineOptions({
+	inheritAttrs: false,
+});
+
 const props = defineProps<{
 	id?: string;
 	workflow: IWorkflowDb;
@@ -42,31 +46,5 @@ const { elements, connections } = useCanvasMapping({ workflow, workflowObject })
 	height: 100%;
 	position: relative;
 	display: block;
-}
-
-.executionButtons {
-	position: absolute;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	left: 50%;
-	transform: translateX(-50%);
-	bottom: var(--spacing-l);
-	width: auto;
-
-	@media (max-width: $breakpoint-2xs) {
-		bottom: 150px;
-	}
-
-	button {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		margin-left: 0.625rem;
-
-		&:first-child {
-			margin: 0;
-		}
-	}
 }
 </style>

@@ -31,10 +31,12 @@ export const WEBHOOK_NODE_TYPE = 'n8n-nodes-base.webhook';
 export const MANUAL_TRIGGER_NODE_TYPE = 'n8n-nodes-base.manualTrigger';
 export const ERROR_TRIGGER_NODE_TYPE = 'n8n-nodes-base.errorTrigger';
 export const START_NODE_TYPE = 'n8n-nodes-base.start';
+export const EXECUTE_WORKFLOW_NODE_TYPE = 'n8n-nodes-base.executeWorkflow';
 export const EXECUTE_WORKFLOW_TRIGGER_NODE_TYPE = 'n8n-nodes-base.executeWorkflowTrigger';
 export const CODE_NODE_TYPE = 'n8n-nodes-base.code';
 export const FUNCTION_NODE_TYPE = 'n8n-nodes-base.function';
 export const FUNCTION_ITEM_NODE_TYPE = 'n8n-nodes-base.functionItem';
+export const MERGE_NODE_TYPE = 'n8n-nodes-base.merge';
 
 export const STARTING_NODE_TYPES = [
 	MANUAL_TRIGGER_NODE_TYPE,
@@ -100,3 +102,5 @@ export const SINGLE_EXECUTION_NODES: { [key: string]: { [key: string]: NodeParam
 		operation: [undefined], // default info
 	},
 };
+
+export const OBFUSCATED_ERROR_MESSAGE = 'Internal error';

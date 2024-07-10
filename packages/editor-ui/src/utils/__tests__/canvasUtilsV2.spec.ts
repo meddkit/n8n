@@ -4,6 +4,7 @@ import {
 	getUniqueNodeName,
 	mapCanvasConnectionToLegacyConnection,
 	parseCanvasConnectionHandleString,
+	createCanvasConnectionHandleString,
 } from '@/utils/canvasUtilsV2';
 import { NodeConnectionType, type IConnections, type INodeTypeDescription } from 'n8n-workflow';
 import type { CanvasConnection } from '@/types';
@@ -427,10 +428,11 @@ describe('mapLegacyConnectionsToCanvasConnections', () => {
 
 describe('parseCanvasConnectionHandleString', () => {
 	it('should parse valid handle string', () => {
-		const handle = 'outputs/main/1';
+		const handle = 'inputs/main/1';
 		const result = parseCanvasConnectionHandleString(handle);
 
 		expect(result).toEqual({
+			mode: 'inputs',
 			type: 'main',
 			index: 1,
 		});
@@ -441,6 +443,7 @@ describe('parseCanvasConnectionHandleString', () => {
 		const result = parseCanvasConnectionHandleString(handle);
 
 		expect(result).toEqual({
+			mode: 'outputs',
 			type: 'main',
 			index: 0,
 		});
@@ -451,6 +454,7 @@ describe('parseCanvasConnectionHandleString', () => {
 		const result = parseCanvasConnectionHandleString(handle);
 
 		expect(result).toEqual({
+			mode: 'outputs',
 			type: 'main',
 			index: 0,
 		});
@@ -461,6 +465,7 @@ describe('parseCanvasConnectionHandleString', () => {
 		const result = parseCanvasConnectionHandleString(handle);
 
 		expect(result).toEqual({
+			mode: 'outputs',
 			type: 'main',
 			index: 1,
 		});
@@ -471,9 +476,39 @@ describe('parseCanvasConnectionHandleString', () => {
 		const result = parseCanvasConnectionHandleString(handle);
 
 		expect(result).toEqual({
+			mode: 'outputs',
 			type: 'main',
 			index: 0,
 		});
+	});
+});
+
+describe('createCanvasConnectionHandleString', () => {
+	it('should create handle string with default values', () => {
+		const result = createCanvasConnectionHandleString({ mode: 'inputs' });
+		expect(result).toBe('inputs/main/0');
+	});
+
+	it('should create handle string with provided values', () => {
+		const result = createCanvasConnectionHandleString({
+			mode: 'outputs',
+			type: NodeConnectionType.AiMemory,
+			index: 2,
+		});
+		expect(result).toBe(`outputs/${NodeConnectionType.AiMemory}/2`);
+	});
+
+	it('should create handle string with mode and type only', () => {
+		const result = createCanvasConnectionHandleString({
+			mode: 'inputs',
+			type: NodeConnectionType.AiTool,
+		});
+		expect(result).toBe(`inputs/${NodeConnectionType.AiTool}/0`);
+	});
+
+	it('should create handle string with mode and index only', () => {
+		const result = createCanvasConnectionHandleString({ mode: 'outputs', index: 3 });
+		expect(result).toBe('outputs/main/3');
 	});
 });
 
@@ -500,13 +535,13 @@ describe('mapCanvasConnectionToLegacyConnection', () => {
 describe('mapLegacyEndpointsToCanvasConnectionPort', () => {
 	it('should return an empty array and log a warning when inputs is a string', () => {
 		const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		const endpoints: INodeTypeDescription['inputs'] = 'some code';
+		const endpoints: INodeTypeDescription['inputs'] = '={{some code}}';
 		const result = mapLegacyEndpointsToCanvasConnectionPort(endpoints);
 
 		expect(result).toEqual([]);
 		expect(consoleWarnSpy).toHaveBeenCalledWith(
 			'Node endpoints have not been evaluated',
-			'some code',
+			'={{some code}}',
 		);
 
 		consoleWarnSpy.mockRestore();

@@ -3,12 +3,15 @@ import { computed, inject, useCssModule } from 'vue';
 import { CanvasNodeKey } from '@/constants';
 import { useI18n } from '@/composables/useI18n';
 
-const emit = defineEmits(['delete']);
+const emit = defineEmits<{
+	delete: [];
+	toggle: [];
+	run: [];
+}>();
+
 const $style = useCssModule();
-
-const node = inject(CanvasNodeKey);
-
 const i18n = useI18n();
+const node = inject(CanvasNodeKey);
 
 const data = computed(() => node?.data.value);
 
@@ -18,13 +21,15 @@ const workflowRunning = false;
 // @TODO
 const nodeDisabledTitle = 'Test';
 
-// @TODO
-function executeNode() {}
+function executeNode() {
+	emit('run');
+}
 
-// @TODO
-function toggleDisableNode() {}
+function onToggleNode() {
+	emit('toggle');
+}
 
-function deleteNode() {
+function onDeleteNode() {
 	emit('delete');
 }
 
@@ -53,7 +58,7 @@ function openContextMenu(_e: MouseEvent, _type: string) {}
 				size="small"
 				icon="power-off"
 				:title="nodeDisabledTitle"
-				@click="toggleDisableNode"
+				@click="onToggleNode"
 			/>
 			<N8nIconButton
 				data-test-id="delete-node-button"
@@ -62,7 +67,7 @@ function openContextMenu(_e: MouseEvent, _type: string) {}
 				text
 				icon="trash"
 				:title="i18n.baseText('node.delete')"
-				@click="deleteNode"
+				@click="onDeleteNode"
 			/>
 			<N8nIconButton
 				data-test-id="overflow-node-button"
@@ -78,12 +83,17 @@ function openContextMenu(_e: MouseEvent, _type: string) {}
 
 <style lang="scss" module>
 .canvasNodeToolbar {
-	padding-bottom: var(--spacing-3xs);
+	padding-bottom: var(--spacing-2xs);
 }
 
 .canvasNodeToolbarItems {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	background-color: var(--color-canvas-background);
+
+	:global(.button) {
+		--button-font-color: var(--color-text-light);
+	}
 }
 </style>

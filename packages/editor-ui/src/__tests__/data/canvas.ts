@@ -6,16 +6,28 @@ export function createCanvasNodeData({
 	id = 'node',
 	type = 'test',
 	typeVersion = 1,
+	disabled = false,
 	inputs = [],
 	outputs = [],
+	connections = { input: {}, output: {} },
+	execution = { running: false },
+	issues = { items: [], visible: false },
+	pinnedData = { count: 0, visible: false },
+	runData = { count: 0, visible: false },
 	renderType = 'default',
 }: Partial<CanvasElementData> = {}): CanvasElementData {
 	return {
+		execution,
+		issues,
+		pinnedData,
+		runData,
 		id,
 		type,
 		typeVersion,
+		disabled,
 		inputs,
 		outputs,
+		connections,
 		renderType,
 	};
 }
@@ -43,7 +55,7 @@ export function createCanvasNodeProps({
 	label = 'Test Node',
 	selected = false,
 	data = {},
-} = {}) {
+}: { id?: string; label?: string; selected?: boolean; data?: Partial<CanvasElementData> } = {}) {
 	return {
 		id,
 		label,
@@ -57,7 +69,7 @@ export function createCanvasNodeProvide({
 	label = 'Test Node',
 	selected = false,
 	data = {},
-} = {}) {
+}: { id?: string; label?: string; selected?: boolean; data?: Partial<CanvasElementData> } = {}) {
 	const props = createCanvasNodeProps({ id, label, selected, data });
 	return {
 		[`${CanvasNodeKey}`]: {

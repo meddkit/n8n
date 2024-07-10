@@ -2,8 +2,15 @@ import CanvasNodeConfigurable from '@/components/canvas/elements/nodes/render-ty
 import { createComponentRenderer } from '@/__tests__/render';
 import { NodeConnectionType } from 'n8n-workflow';
 import { createCanvasNodeProvide } from '@/__tests__/data';
+import { setActivePinia } from 'pinia';
+import { createTestingPinia } from '@pinia/testing';
 
 const renderComponent = createComponentRenderer(CanvasNodeConfigurable);
+
+beforeEach(() => {
+	const pinia = createTestingPinia();
+	setActivePinia(pinia);
+});
 
 describe('CanvasNodeConfigurable', () => {
 	it('should render node correctly', () => {
@@ -44,6 +51,36 @@ describe('CanvasNodeConfigurable', () => {
 		});
 	});
 
+	describe('disabled', () => {
+		it('should apply disabled class when node is disabled', () => {
+			const { getByText } = renderComponent({
+				global: {
+					provide: {
+						...createCanvasNodeProvide({
+							data: {
+								disabled: true,
+							},
+						}),
+					},
+				},
+			});
+
+			expect(getByText('Test Node').closest('.node')).toHaveClass('disabled');
+			expect(getByText('(Deactivated)')).toBeVisible();
+		});
+
+		it('should not apply disabled class when node is enabled', () => {
+			const { getByText } = renderComponent({
+				global: {
+					provide: {
+						...createCanvasNodeProvide(),
+					},
+				},
+			});
+			expect(getByText('Test Node').closest('.node')).not.toHaveClass('disabled');
+		});
+	});
+
 	describe('inputs', () => {
 		it('should adjust width css variable based on the number of non-main inputs', () => {
 			const { getByText } = renderComponent({
@@ -52,10 +89,10 @@ describe('CanvasNodeConfigurable', () => {
 						...createCanvasNodeProvide({
 							data: {
 								inputs: [
-									{ type: NodeConnectionType.Main },
-									{ type: NodeConnectionType.AiTool },
-									{ type: NodeConnectionType.AiDocument, required: true },
-									{ type: NodeConnectionType.AiMemory, required: true },
+									{ type: NodeConnectionType.Main, index: 0 },
+									{ type: NodeConnectionType.AiTool, index: 0 },
+									{ type: NodeConnectionType.AiDocument, index: 0, required: true },
+									{ type: NodeConnectionType.AiMemory, index: 0, required: true },
 								],
 							},
 						}),
