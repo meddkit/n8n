@@ -1,5 +1,5 @@
 import * as onboardingApi from '@/api/workflow-webhooks';
-import Logo from '../../../../assets/n8n-logo.png'
+import Logo from '@/assets/images/n8n-logo.png'
 import {
 	ABOUT_MODAL_KEY,
 	CHAT_EMBED_MODAL_KEY,
