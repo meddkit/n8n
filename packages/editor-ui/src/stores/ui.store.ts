@@ -1,5 +1,4 @@
 import * as onboardingApi from '@/api/workflow-webhooks';
-// import Logo from '@/assets/images/n8n-logo.png'
 import {
 	ABOUT_MODAL_KEY,
 	CHAT_EMBED_MODAL_KEY,
@@ -209,13 +208,13 @@ export const useUIStore = defineStore(STORES.UI, () => {
 		return theme.value === 'system' ? getPreferredTheme() : theme.value;
 	});
 
-	// const logo = computed(() => {
-	// 	const { releaseChannel } = settingsStore.settings;
-	// 	const suffix = appliedTheme.value === 'dark' ? '-dark.svg' : '.svg';
-	// 	return `static/logo/${
-	// 		releaseChannel === 'stable' ? 'expanded' : `channel/${releaseChannel}`
-	// 	}${suffix}`;
-	// });
+	const logo = computed(() => {
+		const { releaseChannel } = settingsStore.settings;
+		const suffix = appliedTheme.value === 'dark' ? '-dark.svg' : '.svg';
+		return `static/logo/${
+			releaseChannel === 'stable' ? 'expanded' : `channel/${releaseChannel}`
+		}${suffix}`;
+	});
 
 	const contextBasedTranslationKeys = computed(() => {
 		const deploymentType = settingsStore.deploymentType;
@@ -625,7 +624,7 @@ export const useUIStore = defineStore(STORES.UI, () => {
 
 	return {
 		appliedTheme,
-		logo: '@/assets/images/n8n-logo.png',
+		logo,
 		contextBasedTranslationKeys,
 		getLastSelectedNode,
 		isVersionsOpen,

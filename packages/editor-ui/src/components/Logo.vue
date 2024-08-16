@@ -7,6 +7,7 @@ import { defineComponent } from 'vue';
 import { mapStores } from 'pinia';
 import { useRootStore } from '@/stores/root.store';
 import { useUIStore } from '@/stores/ui.store';
+import Logo from '@/assets/n8n-logo.png';
 
 export default defineComponent({
 	computed: {
@@ -15,7 +16,7 @@ export default defineComponent({
 			return this.rootStore.baseUrl;
 		},
 		logoPath(): string {
-			return this.basePath + this.uiStore.logo;
+			return Logo;
 		},
 	},
 });
